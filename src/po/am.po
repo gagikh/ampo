@@ -695,7 +695,7 @@ msgid "can't read output of 'charconvert'"
 msgstr "անհնար է ընթերցել 'charconvert'-ի ելքը"
 
 msgid "[dos]"
-msgstr "[dos]"
+msgstr "[դոս]"
 
 msgid "[dos format]"
 msgstr "[format dos]"
@@ -707,7 +707,7 @@ msgid "[mac format]"
 msgstr "[format mac]"
 
 msgid "[unix]"
-msgstr "[unix]"
+msgstr "[յունիքս]"
 
 msgid "[unix format]"
 msgstr "[format unix]"
@@ -3444,10 +3444,10 @@ msgid "Vim is open source and freely distributable"
 msgstr "Vim֊ը բաց կոդով և ազատ տարածվող ծրագիր է"
 
 msgid "Help poor children in Uganda!"
-msgstr "Օգնեք ՈՒգանդացի աղքատ երեխաներին!"
+msgstr "Օգնեցեք ՈՒգանդացի աղքատ երեխաներին!"
 
 msgid "type  :help iccf<Enter>       for information "
-msgstr "տեղեկատվության համար տալ :help iccf<Enter> հրամանը "
+msgstr "հավելյալ տեղեկատվության համար տալ :help iccf<Enter> հրամանը "
 
 msgid "type  :q<Enter>               to exit         "
 msgstr "ծրագրից դուրս գալու համար տալ :q<Enter> հրամանը         "
