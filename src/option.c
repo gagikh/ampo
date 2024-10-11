@@ -186,7 +186,7 @@ set_init_default_backupskip(void)
 	    item = alloc(itemsize);
 	    if (item != NULL)
 	    {
-		// add a preceeding comma as a separator after the first item
+		// add a preceding comma as a separator after the first item
 		size_t	itemseplen = (ga.ga_len == 0) ? 0 : 1;
 		size_t	itemlen;
 
@@ -2251,10 +2251,11 @@ do_set_option_numeric(
      * Different ways to set a number option:
      * &	    set to default value
      * <	    set to global value
-     * <xx>	    accept special key codes for 'wildchar'
-     * c	    accept any non-digit for 'wildchar'
-     * [-]0-9   set number
-     * other    error
+     * <xx>	    accept special key codes for 'wildchar' or 'wildcharm'
+     * ^x	    accept ctrl key codes for 'wildchar' or 'wildcharm'
+     * c	    accept any non-digit for 'wildchar' or 'wildcharm'
+     * [-]0-9	    set number
+     * other	    error
      */
     ++arg;
     if (nextchar == '&')
@@ -2281,7 +2282,7 @@ do_set_option_numeric(
 		    && !VIM_ISDIGIT(*arg))))
     {
 	value = string_to_key(arg, FALSE);
-	if (value == 0 && (long *)varp != &p_wcm)
+	if (value == 0)
 	{
 	    errmsg = e_invalid_argument;
 	    goto skip;
@@ -2793,16 +2794,21 @@ did_set_option(
 
 /*
  * Convert a key name or string into a key value.
- * Used for 'wildchar' and 'cedit' options.
+ * Used for 'cedit', 'termwinkey', 'wildchar' and 'wildcharm' options.
  * When "multi_byte" is TRUE allow for multi-byte characters.
  */
     int
 string_to_key(char_u *arg, int multi_byte)
 {
-    if (*arg == '<')
+    if (*arg == '<' && arg[1])
 	return find_key_option(arg + 1, TRUE);
-    if (*arg == '^')
-	return Ctrl_chr(arg[1]);
+    if (*arg == '^' && arg[1])
+    {
+	int key = Ctrl_chr(arg[1]);
+	if (key == 0)		// ^@ is <Nul>
+	    key = K_ZERO;
+	return key;
+    }
     if (multi_byte)
 	return PTR2CHAR(arg);
     return *arg;
@@ -5621,7 +5627,10 @@ find_key_option(char_u *arg_arg, int has_lt)
     // Don't use get_special_key_code() for t_xx, we don't want it to call
     // add_termcap_entry().
     if (arg[0] == 't' && arg[1] == '_' && arg[2] && arg[3])
-	key = TERMCAP2KEY(arg[2], arg[3]);
+    {
+	if (!has_lt || arg[4] == '>')
+	    key = TERMCAP2KEY(arg[2], arg[3]);
+    }
     else if (has_lt)
     {
 	--arg;			    // put arg at the '<'
@@ -6736,6 +6745,11 @@ win_copy_options(win_T *wp_from, win_T *wp_to)
     void
 after_copy_winopt(win_T *wp)
 {
+    // Set w_leftcol or w_skipcol to zero.
+    if (wp->w_p_wrap)
+	wp->w_leftcol = 0;
+    else
+	wp->w_skipcol = 0;
 #ifdef FEAT_LINEBREAK
     briopt_check(wp);
 #endif

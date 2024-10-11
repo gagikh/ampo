@@ -844,6 +844,7 @@ extern int (*dyn_libintl_wputenv)(const wchar_t *envstring);
 #define EXPAND_TERMINALOPT	57
 #define EXPAND_KEYMAP		58
 #define EXPAND_DIRS_IN_CDPATH	59
+#define EXPAND_SHELLCMDLINE	60
 
 
 // Values for exmode_active (0 is no exmode)
@@ -2371,6 +2372,17 @@ typedef enum {
     FCERR_NOTMETHOD,	// function cannot be used as a method
     FCERR_FAILED,	// error while executing the function
 } funcerror_T;
+
+/*
+ * Array indexes used for cp_text[].
+ */
+typedef enum {
+    CPT_ABBR,		// "abbr"
+    CPT_KIND,		// "kind"
+    CPT_MENU,		// "menu"
+    CPT_INFO,		// "info"
+    CPT_COUNT,		// Number of entries
+} cpitem_T;
 
 /*
  * Type for the callback function that is invoked after an option value is
